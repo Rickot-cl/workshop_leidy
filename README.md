@@ -17,18 +17,18 @@ El entorno funciona sobre dos contenedores aislados comunicados mediante una red
 ```text
 workshop_etl/
 ├── dags/
-│   └── spotify_grammys.py      # Definición de la DAG en Airflow
+│   └── spotify_grammys.py      
 ├── data/
-│   ├── datasetspotify.csv                 # Fuente CSV de Spotify
-│   ├── the_grammys_awards.csv                 # Fuente inicial de Grammys
-│   └── processed/                  # Staging intermedio
+│   ├── datasetspotify.csv                 
+│   ├── the_grammys_awards.csv                
+│   └── processed/                  
 ├── scripts/
-│   ├── data_analyze.py         # Semilla de BD e inspección
-│   ├── data_quality.py             # Quality Gate con Pandera
-│   ├── transformation.py          # Limpieza, normalización y Merge
-│   └── reports.py          # Generador de Dashboard desde PostgreSQL
+│   ├── data_analyze.py        
+│   ├── data_quality.py            
+│   ├── transformation.py       
+│   └── reports.py          
 ├── reports/
-│   └── dashboard.png               # Reporte gráfico resultante
-├── docker-compose.yml              # Infraestructura como código
-├── requirements.txt                # Dependencias de Python
-└── README.md                       # Documentación técnica
+│   └── dashboard.png              
+├── docker-compose.yml              
+├── requirements.txt                
+└── README.md                       
