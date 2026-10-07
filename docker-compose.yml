@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow_password
+      POSTGRES_DB: target_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - etl_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d target_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  airflow:
+    image: apache/airflow:2.8.1-python3.10
+    container_name: airflow_runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - AIRFLOW__CORE__FERNET_KEY=rVcJZh-D87Lf76zJsO3sQf6pxq9VH6uMbeRKnp8pE14=
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+      - AIRFLOW_CONN_POSTGRES_DEFAULT=postgresql://airflow:airflow_password@postgres:5432/target_db
+    user: "${AIRFLOW_UID:-50000}:0"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data
+      - ./reports:/opt/airflow/reports
+      - ./requirements.txt:/opt/airflow/requirements.txt
+    networks:
+      - etl_network
+    command: >
+      bash -c "pip install --no-cache-dir 'pandera==0.20.4' 'multimethod>=1.10' &&
+           pip install -r /opt/airflow/requirements.txt &&
+           airflow db init &&
+           airflow users create --username admin --firstname Data --lastname Engineer --role Admin --email admin@example.com --password admin &&
+           airflow standalone"
+
+volumes:
+  postgres_data:
+
+networks:
+  etl_network:
+    driver: bridge

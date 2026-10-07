@@ -1,0 +1,14 @@
+
+data/processed/*
+data/staging/*
+data/final_output/*
+!data/datasetspotify.csv
+!data/the_grammys_awards.csv
+
+__pycache__/
+*.pyc
+.venv/
+.env
+
+logs/
+airflow.db

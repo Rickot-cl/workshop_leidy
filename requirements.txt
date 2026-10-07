@@ -1,0 +1,7 @@
+pandas==2.1.4
+pandera==0.20.4
+multimethod>=1.10
+sqlalchemy==1.4.51
+psycopg2-binary==2.9.9
+matplotlib==3.8.2
+seaborn==0.13.1
